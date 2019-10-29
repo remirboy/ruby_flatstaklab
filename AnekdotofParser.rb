@@ -15,25 +15,47 @@ for el in 0...link.length()
 	end
 
 
+def toDb(arr, table)
+	begin
+	i = 1;
+	require 'pg'
+	con = PG.connect :dbname => 'remir', :user => 'remir'
+	for text in arr do
+		rs = con.exec "SELECT * FROM " + table + " WHERE type=" + "'" + text + "';"
+		if rs.ntuples == 0 then
+		con.exec "INSERT INTO " + table + " VALUES ('" + text + "');"
+		puts i.to_s + " " + text
+		i += 1
+		end
+	end
+	
+	rescue PG::Error => e
+	puts e.message
+	
+	ensure
+	con.close if con
+	end
+end
 
-#anekdots = []
-#id = []
-#description=''
-#    tags = doc.xpath('//div')
-#      tags.each do |tag|
-#      description = tags.map { |t| t[:class] }
- #   end
-
-#doc.css('.text').each do |showing|
- # 	anekdot_id = showing['id'].split('"').last.to_i
-#  	description = showing.search('//*[@class="text"]').text
-#    id.push(anekdot_id:anekdot_id,description:description)
- #  end
-
-#puts description
-# k=0
+def jokeSearch(request,link)
+	for el in 0...link.length()
+	if /#{request}/=~link[el] then
+		puts link[el].text
+		joke = link[el].text
+	end
+end
+	
+end
 
 
+toDb(link, "jokes")
 
+request=""
 
+joke=""
 
+while request!="exit"
+	puts "Enter word for search"
+	request = gets.chomp().to_s
+	jokeSearch(request,link)
+end
