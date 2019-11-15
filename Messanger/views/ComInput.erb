@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Comments</title>
+</head>
+<body>
+<div class="comments">
+<% @comments.each do |el| %>
+  <div class="comment">
+    <h5>Comment:</h5><%= el["text"] %>
+    <a href="/comments/<%= el["id"] %>">X</a>
+      <h5>Message_id:</h5><%= el["message_id"] %>
+  </div>
+  <br>
+<% end %>
+
+</div>
+
+<form method="POST" action="/comments">
+  <div class="form-group">
+    <input type="text" id="text" name="text" class="form-control">
+    <input type="text" id="message_id" name="message_id" class="form-control">
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">
+      Save comment
+    </button>
+  </div>
+</form>
+</body>
+</html>
+
+
+

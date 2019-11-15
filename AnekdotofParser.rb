@@ -1,18 +1,25 @@
 require 'nokogiri'
 require 'open-uri'
 require 'json'
+require 'pg'
 
-url = 'https://nekdo.ru/'
-html = open(url)
-
-doc = Nokogiri::HTML(html)
-k=1
-link = doc.search('//*[@class="text"]')
-for el in 0...link.length()
-	puts k
-	puts link[el].content
-	k=k+1
+def findJoke(word)	
+	con = PG.connect :dbname => 'remir', :user => 'remir'
+	begin
+	  rs = con.exec "SELECT * FROM jokes WHERE type LIKE '%/#{word}/%'";
+	  arr = Array.new() 
+	  
+    rs.each do |row|
+			arr.push(Anekdot.new(row['type']))
+		end
+		rs.to_a
+		arr
+	rescue PG::Error => e
+		puts e
+  ensure
+    con.close
 	end
+end
 
 
 def toDb(arr, table)
@@ -45,17 +52,30 @@ def jokeSearch(request,link)
 	end
 end
 	
-end
+
+
+
+
+
+
+url = 'https://nekdo.ru/'
+html = open(url)
+
+doc = Nokogiri::HTML(html)
+k=1
+link = doc.search('//*[@class="text"]')
+for el in 0...link.length()
+	puts k
+	puts link[el].content
+	k=k+1
+	end
+
+
 
 
 toDb(link, "jokes")
-
-request=""
-
+puts "Enter word for search"
+request = gets.chomp().to_s
+findJoke(request)
 joke=""
 
-while request!="exit"
-	puts "Enter word for search"
-	request = gets.chomp().to_s
-	jokeSearch(request,link)
-end

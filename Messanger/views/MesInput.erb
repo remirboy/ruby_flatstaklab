@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Messages</title>
+</head>
+<body>
+<div class="messages">
+<% @messages.each do |el| %>
+  <div class="message">
+    <h5>Message:</h5><%= el["text"] %>
+    <a href="/messages/<%= el["id"] %>">X</a>
+    <h5>Message_id:</h5><%= el["id"] %>
+  </div>
+  <br>
+<% end %>
+
+</div>
+
+<form method="POST" action="/messages">
+  <div class="form-group">
+    <input type="text" id="text" name="text" class="form-control">
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">
+      Save message
+    </button>
+  </div>
+</form>
+</body>
+</html>
+
+
+
