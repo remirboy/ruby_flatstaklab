@@ -3,8 +3,6 @@ require "./Comment.rb"
 
 class Message
 
-
-
   def initialize(params)
     @params = params
     return unless valid?
